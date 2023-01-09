@@ -27,6 +27,8 @@ MAX_BALL_PADDLE_DISTANCE = HEIGHT - PADDLE_SIZE.y/2 - BALL_SIZE.y/2
 K = 10
 TEXT_MARGIN = 10
 
+GRAPH_LABELS = {'x': 'Runs', 'y': 'Success pourcentage'}
+
 
 # learner constants
 DEFAULT_REWARD = 0.5

@@ -1,4 +1,5 @@
 import pygame as pg
+import plotly.express as px
 import math
 import random
 import numpy as np
@@ -51,6 +52,8 @@ learner_actions_state = ""
 
 runs_cpt = 0
 paddle_hits = []
+success_percentage = 0;
+graph_values = []
 
 has_updated = False
 has_failed_run = False
@@ -65,7 +68,7 @@ while is_running :
 
     window.fill(COLORS["black"])
 
-    # events
+    # Events
     for event in pg.event.get() :
         if event.type == pg.QUIT :
             is_running = False
@@ -73,12 +76,6 @@ while is_running :
         if event.type == pg.KEYDOWN :
             if event.key == pg.K_ESCAPE :
                 is_running = False
-
-            if event.key == pg.K_w:
-                paddle.pos.y -= 5;
-
-            if event.key == pg.K_s:
-                paddle.pos.y += 5;
 
 
     if time_counter >= TIMESTEP :
@@ -120,12 +117,13 @@ while is_running :
         past_states = []
 
         runs_cpt += 1
+        graph_values.append(success_percentage)
 
     # if the ball goes outide the screen to the left, reset the game
     if ball.isOutsideBoundaryMin(ball.pos.x) :
         has_failed_run = resetEnvironment()
 
-    # text
+    # Text
     learner_state_txt = font.render("Actions : " + learner_actions_state, True, COLORS["gray"]);
     if runs_cpt > 0:
         divider = K
@@ -146,11 +144,11 @@ while is_running :
         learner_state_txt.get_height() + TEXT_MARGIN)
     )
 
-    # update
+    # Update
     paddle.update(dt/1000)
     ball.update(paddle, dt/1000)
 
-    # draw
+    # Draw
     paddle.draw(window)
     ball.draw(window)
 
@@ -158,3 +156,7 @@ while is_running :
 
 
 pg.quit()
+
+# draw graph    
+fig = px.line(x=list(range(1, len(graph_values) + 1)), y=graph_values, labels=GRAPH_LABELS)
+fig.write_html("fig.html", auto_open=True)
